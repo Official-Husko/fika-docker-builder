@@ -16,9 +16,10 @@ jobs:
     - name: Build Docker image
       run: |
         docker build --no-cache --label FIKA -t fika .
+        docker save -o fika-docker-image.tar fika
 
-    - name: Save Docker image as artifact
+    - name: Upload Docker image as artifact
       uses: actions/upload-artifact@v4
       with:
         name: fika-docker-image
-        path: ./   # Change this path to the directory where your Dockerfile is located
+        path: fika-docker-image.tar
