@@ -1,26 +1,26 @@
-name: Daily Build and Release Docker Image
+name: Build and Release Docker Image
 
 on:
+  schedule:
+  - cron: "0 0 * * *"
+  
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight UTC
 
 jobs:
-  build-and-release:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
+    - uses: actions/checkout@v3
+
     - name: Build Docker image
       run: |
         docker build --no-cache --label FIKA -t fika .
 
     - name: Save Docker image as artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: fika-docker-image
         path: .   # Change this path to the directory where your Dockerfile is located
@@ -28,13 +28,9 @@ jobs:
     - name: Get short SHA
       run: echo "::set-env name=SHORT_SHA::$(echo $GITHUB_SHA | head -c 7)"
 
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v4
+    - name: Create a Release
+      uses: elgohr/Github-Release-Action@v5
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.SHORT_SHA }}
-        release_name: Release ${{ env.SHORT_SHA }}
-        draft: false
-        prerelease: false
+        title: ${{ env.SHORT_SHA }}
