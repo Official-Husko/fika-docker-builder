@@ -6,13 +6,16 @@ on:
       - main
   schedule:
     - cron: "0 0 * * *"
-  
+
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Get current date in YYYY-MM-DD format
+      run: echo "VERSION=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
     - name: Build Docker image
       run: |
@@ -20,10 +23,21 @@ jobs:
 
     - name: Save Docker image as tarball
       run: |
-        docker save -o fika-docker-image.tar fika
+        docker save -o fika-docker-image-${{ env.VERSION }}.tar fika
 
-    - name: Upload Docker image as artifact
+    - name: Upload Docker image artifact
       uses: actions/upload-artifact@v4
       with:
-        name: fika-docker-image
-        path: ./fika-docker-image.tar
+        name: fika-docker-image-${{ env.VERSION }}
+        path: ./fika-docker-image-${{ env.VERSION }}.tar
+
+    - name: Create release
+      uses: actions/create-release@v4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needs write access to repo
+      with:
+        tag_name: ${{ env.VERSION }}
+        release_name: "Release v${{ env.VERSION }}"
+        body: "Built and released Docker image on ${{ github.workflow_run_created_at }}"
+        draft: false  # Set to true to create draft releases
+
