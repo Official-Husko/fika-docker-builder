@@ -5,9 +5,7 @@
 
 FROM ubuntu:latest AS builder
 ARG FIKA=HEAD^
-ARG FIKA_BRANCH=v2.0
 ARG SPT=HEAD^
-ARG SPT_BRANCH=3.8.1
 ARG NODE=20.11.1
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -19,7 +17,7 @@ RUN apt update && apt install -yq git git-lfs curl
 RUN git clone https://github.com/nvm-sh/nvm.git $HOME/.nvm || true
 RUN \. $HOME/.nvm/nvm.sh && nvm install $NODE
 ## Clone the SPT AKI repo or continue if it exist
-RUN git clone --branch $SPT_BRANCH https://dev.sp-tarkov.com/SPT-AKI/Server.git srv || true
+RUN git clone https://dev.sp-tarkov.com/SPT-AKI/Server.git srv || true
 
 ## Check out and git-lfs (specific commit --build-arg SPT=xxxx)
 WORKDIR /opt/srv/project
@@ -36,7 +34,7 @@ RUN mv build/ /opt/server/
 WORKDIR /opt
 RUN rm -rf srv/
 ## Grab FIKA Server Mod or continue if it exist
-RUN git clone --branch $FIKA_BRANCH https://github.com/project-fika/Fika-Server.git ./server/user/mods/fika-server
+RUN git clone https://github.com/project-fika/Fika-Server.git ./server/user/mods/fika-server
 RUN \. $HOME/.nvm/nvm.sh && cd ./server/user/mods/fika-server && git checkout $FIKA && npm install
 RUN rm -rf ./server/user/mods/FIKA/.git
 
