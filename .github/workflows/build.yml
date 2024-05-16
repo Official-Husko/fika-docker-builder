@@ -31,13 +31,13 @@ jobs:
         name: fika-docker-image-${{ env.VERSION }}
         path: ./fika-docker-image-${{ env.VERSION }}.tar
 
-    - name: Create release
-      uses: actions/create-release@v4
+    - name: Create release with action-gh-release
+      uses: softprops/action-gh-release@v2  # Use the latest stable version (check for updates)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needs write access to repo
       with:
         tag_name: ${{ env.VERSION }}
-        release_name: "Release v${{ env.VERSION }}"
+        name: "Release v${{ env.VERSION }}"  # Optional: customize release name
         body: "Built and released Docker image on ${{ github.workflow_run_created_at }}"
         draft: false  # Set to true to create draft releases
-
+        files: ./fika-docker-image-${{ env.VERSION }}.tar  # Upload the artifact as release asset
