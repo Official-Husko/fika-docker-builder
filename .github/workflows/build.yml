@@ -37,7 +37,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needs write access to repo
       with:
         tag_name: ${{ env.VERSION }}
-        name: "Release v${{ env.VERSION }}"  # Optional: customize release name
-        body: "Built using the latest fika and spt versions on ${{ env.VERSION }}"
+        name: "Release ${{ env.VERSION }}"  # Optional: customize release name
+        body: "Built using the latest fika and spt version 3.8.3 on ${{ env.VERSION }}"
         draft: false  # Set to true to create draft releases
         files: ./fika-docker-image-${{ env.VERSION }}.tar  # Upload the artifact as release asset

@@ -7,7 +7,7 @@ FROM ubuntu:latest AS builder
 ARG FIKA=HEAD^
 ARG FIKA_BRANCH=main
 ARG SPT=HEAD^
-ARG SPT_BRANCH=master
+ARG SPT_BRANCH=3.8.3
 ARG NODE=20.11.1
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
