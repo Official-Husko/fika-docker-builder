@@ -4,8 +4,6 @@
 ##
 
 FROM ubuntu:latest AS builder
-ARG FIKA=HEAD^
-ARG SPT=HEAD^
 ARG NODE=20.11.1
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -21,7 +19,7 @@ RUN git clone https://dev.sp-tarkov.com/SPT-AKI/Server.git srv || true
 
 ## Check out and git-lfs (specific commit --build-arg SPT=xxxx)
 WORKDIR /opt/srv/project
-RUN git checkout $SPT
+RUN git fetch
 RUN git-lfs pull
 
 ## remove the encoding from aki - todo: find a better workaround
