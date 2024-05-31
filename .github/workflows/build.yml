@@ -38,6 +38,6 @@ jobs:
       with:
         tag_name: ${{ env.VERSION }}
         name: "Release v${{ env.VERSION }}"  # Optional: customize release name
-        body: "Built and released Docker image on ${{ github.workflow_run_created_at }}"
+        body: "Built using the latest fika and spt versions on ${{ env.VERSION }}"
         draft: false  # Set to true to create draft releases
         files: ./fika-docker-image-${{ env.VERSION }}.tar  # Upload the artifact as release asset
